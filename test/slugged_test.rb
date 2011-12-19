@@ -139,6 +139,25 @@ class SlugSeparatorTest < MiniTest::Unit::TestCase
       assert record2.should_generate_new_friendly_id?
     end
   end
+
+  test "should not change slug if it set manually" do
+    with_instance_of model_class do |record|
+      record2 = model_class.create! :name => record.name
+      assert !record2.should_generate_new_friendly_id?
+      record2.slug = "custom"
+      assert !record2.should_generate_new_friendly_id?
+    end
+  end
+
+  test "should not change slug if it was set manually" do
+    with_instance_of model_class do |record|
+      record2 = model_class.create! :name => record.name
+      record2.slug = "custom"
+      record2.save!
+      record2.name = "hello world"
+      assert !record2.should_generate_new_friendly_id?
+    end
+  end
 end
 
 class DefaultScopeTest < MiniTest::Unit::TestCase

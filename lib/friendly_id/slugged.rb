@@ -218,9 +218,11 @@ issue}[https://github.com/norman/friendly_id/issues/180] for discussion.
       slug_value = send(friendly_id_config.slug_column)
       return false if base.nil? && slug_value.nil?
       return true if new_record?
+      base_was   = send("#{friendly_id_config.base}_was")
+      slug_base_was = normalize_friendly_id(base_was)
       slug_base = normalize_friendly_id(base)
       separator = Regexp.escape friendly_id_config.sequence_separator
-      slug_base != (current_friendly_id || slug_value).try(:sub, /#{separator}[\d]*\z/, '')
+      slug_value.nil? || base_was && base != base_was && slug_base_was == (current_friendly_id || slug_value).try(:sub, /#{separator}[\d]*\z/, '')
     end
 
     # Sets the slug.
